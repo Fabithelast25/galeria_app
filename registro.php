@@ -41,6 +41,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         if(!preg_match("/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/", $apellido)){
             throw new Exception("El apellido solo puede contener letras");
         }
+        if(!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/', $password_raw)){
+            throw new Exception("La contraseña debe tener mínimo 8 caracteres, incluir una mayúscula, un número y un carácter especial.");
+        }
         // ENCRIPTAR PASSWORD
         $password = password_hash($password_raw, PASSWORD_DEFAULT);
 
@@ -73,6 +76,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="/galeria_app/css/styles.css">
 <title>Registro</title>
 
@@ -92,7 +96,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <input type="email" name="email" placeholder="Email" required maxlength="100">
 
         <div style="position: relative;">
-            <input type="password" id="password_reg" name="password" placeholder="Contraseña" required maxlength="50">
+            <input 
+                type="password" 
+                id="password_reg" 
+                name="password" 
+                placeholder="Contraseña" 
+                required 
+                maxlength="50"
+                pattern="(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}"
+                title="Mínimo 8 caracteres, una mayúscula, un número y un carácter especial">
             <span onclick="togglePassword('password_reg', this)" 
                 style="position:absolute; right:20px; top:15px; cursor:pointer;">
                 👁️

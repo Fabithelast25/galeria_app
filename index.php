@@ -2,18 +2,17 @@
 session_start();
 include("db.php");
 
+$alert = "";
+
 // PROCESAR LOGIN
 if(isset($_POST['login'])){
 
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    // VALIDACIONES SEGURAS
+    // VALIDACIONES
     if(empty($username) || strlen($username) > 50 || empty($password) || strlen($password) > 50){
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-        <script>
-        Swal.fire('Error','Datos inválidos','error');
-        </script>";
+        $alert = "Swal.fire('Error','Datos inválidos','error')";
     } else {
 
         $stmt = $conexion->prepare("SELECT password FROM usuarios WHERE username=?");
@@ -27,20 +26,14 @@ if(isset($_POST['login'])){
 
             if(password_verify($password, $hash)){
                 $_SESSION['usuario'] = $username;
-
-                echo "<script>
-                    window.location='galeria.php';
-                </script>";
+                header("Location: galeria.php");
+                exit();
             } else {
-                echo "<script>
-                    Swal.fire('Error','Contraseña incorrecta','error');
-                </script>";
+                $alert = "Swal.fire('Error','Usuario o contraseña incorrectos','error')";
             }
 
         } else {
-            echo "<script>
-                Swal.fire('Error','Usuario no existe','error');
-            </script>";
+            $alert = "Swal.fire('Error','Usuario o contraseña incorrectos','error')";
         }
     }
 }
@@ -52,7 +45,10 @@ if(isset($_POST['login'])){
 <meta charset="UTF-8">
 <link rel="stylesheet" href="/galeria_app/css/styles.css">
 <title>Login</title>
+
+<!-- SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -90,6 +86,13 @@ function togglePassword(id, icon) {
     }
 }
 </script>
+
+<!-- MOSTRAR ALERTA -->
+<?php if(!empty($alert)): ?>
+<script>
+    <?php echo $alert; ?>
+</script>
+<?php endif; ?>
 
 </body>
 </html>

@@ -19,7 +19,7 @@ while($row = $resultado->fetch_assoc()){
 <html>
 <head>
 <meta charset="UTF-8">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="/galeria_app/css/styles.css">
 
 <title>Galería</title>
